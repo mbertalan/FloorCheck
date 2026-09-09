@@ -1,0 +1,14 @@
+# Packaged builds (25 MB each; they live on ficsit.app)
+releases/
+*.zip
+
+# Unreal build output, if the plugin is ever built inside this folder
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+.vs/
+*.pdb
+
+# Session pickup notes, not part of the mod
+NEXT_SESSION.md
