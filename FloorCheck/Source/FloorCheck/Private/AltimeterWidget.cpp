@@ -19,24 +19,56 @@ namespace AltimeterWidgetStyle
 	static const FLinearColor TextColour( 0.92f, 0.92f, 0.92f, 1.0f );
 	static const FLinearColor ShadowColour( 0.0f, 0.0f, 0.0f, 0.85f );
 
-	/** Pixels right of the screen centre (the crosshair) where the box starts. Negative puts it on the left. */
+	/** Pixels between the crosshair and the near edge of the box, to the left or the right. */
 	static constexpr float SideOffsetX = 120.f;
 
-	/** Pixels down from the screen centre. 0 keeps the box level with the crosshair. */
+	/** Pixels down from the screen centre for the left and right positions. 0 keeps the box level with the crosshair. */
 	static constexpr float SideOffsetY = 0.f;
+
+	/** Pixels above the crosshair where the box ends. Clears the crosshair itself. */
+	static constexpr float AboveOffsetY = 70.f;
+
+	/** Pixels below the crosshair where the box starts. Clears the game's own build hints, which grow downwards. */
+	static constexpr float BelowOffsetY = 200.f;
 
 	static constexpr float PanelPaddingX = 14.f;
 	static constexpr float PanelPaddingY = 8.f;
-	static constexpr float LineGapY = 2.f;
+	static constexpr float LineGapY = 4.f;
 	static constexpr int32 PrimaryFontSize = 26;
-	static constexpr int32 SecondaryFontSize = 16;
+	static constexpr int32 SecondaryFontSize = 18;
 
 	/** Below this the text stops being readable, so shrinking stops here. */
-	static constexpr int32 MinFontSize = 8;
+	static constexpr int32 MinFontSize = 10;
+
+	/** Drop shadow behind the text at full size; it is scaled with the rest and never falls below one pixel. */
+	static constexpr float ShadowOffsetPx = 2.f;
+
+	/**
+	 * The pivot on the box and the offset from the screen centre for each position, in the order of
+	 * EFloorCheckPlacement. The pivot sits on the edge facing the crosshair, so a bigger readout grows away
+	 * from it and the gap stays the same at every size.
+	 */
+	struct FPlacementGeometry
+	{
+		FVector2D Alignment;
+		FVector2D Offset;
+	};
+
+	static const FPlacementGeometry Placements[] = {
+		{ FVector2D( 0.f, 0.5f ), FVector2D( SideOffsetX, SideOffsetY ) },
+		{ FVector2D( 1.f, 0.5f ), FVector2D( -SideOffsetX, SideOffsetY ) },
+		{ FVector2D( 0.5f, 1.f ), FVector2D( 0.f, -AboveOffsetY ) },
+		{ FVector2D( 0.5f, 0.f ), FVector2D( 0.f, BelowOffsetY ) }
+	};
 
 	int32 ScaledFontSize( int32 baseSize, float scale )
 	{
 		return FMath::Max( MinFontSize, FMath::RoundToInt( baseSize * scale ) );
+	}
+
+	float ScaledShadowOffset( float scale )
+	{
+		return FMath::Max( 1.f, FMath::RoundToFloat( ShadowOffsetPx * scale ) );
 	}
 }
 
@@ -56,7 +88,6 @@ UTextBlock* UAltimeterWidget::MakeText( const FLinearColor& colour ) const
 	if( block )
 	{
 		block->SetColorAndOpacity( FSlateColor( colour ) );
-		block->SetShadowOffset( FVector2D( 1.f, 1.f ) );
 		block->SetShadowColorAndOpacity( AltimeterWidgetStyle::ShadowColour );
 		block->SetJustification( ETextJustify::Center );
 	}
@@ -96,16 +127,16 @@ void UAltimeterWidget::NativeOnInitialized()
 		slot->SetHorizontalAlignment( HAlign_Center );
 	}
 
-	// Anchored to the screen centre, growing to the side: the vanilla build hints own the column below the crosshair.
+	// Anchored to the screen centre so every position is measured from the crosshair; the box sizes itself.
 	mPanelSlot = canvas->AddChildToCanvas( mPanel );
 	if( mPanelSlot )
 	{
 		mPanelSlot->SetAnchors( FAnchors( 0.5f, 0.5f ) );
-		mPanelSlot->SetAlignment( FVector2D( 0.f, 0.5f ) );
 		mPanelSlot->SetAutoSize( true );
 	}
 
 	ApplyUiScale();
+	ApplyPlacement();
 
 	// Never block mouse or keyboard; start hidden until the first valid reading arrives.
 	SetVisibility( ESlateVisibility::Collapsed );
@@ -123,18 +154,33 @@ void UAltimeterWidget::SetUiScale( float scale )
 	ApplyUiScale();
 }
 
+void UAltimeterWidget::SetPlacement( EFloorCheckPlacement placement )
+{
+	if( placement == mPlacement )
+	{
+		return;
+	}
+
+	mPlacement = placement;
+	ApplyPlacement();
+}
+
 void UAltimeterWidget::ApplyUiScale()
 {
 	using namespace AltimeterWidgetStyle;
 
+	const FVector2D shadowOffset( ScaledShadowOffset( mUiScale ) );
+
 	if( mPrimaryText )
 	{
 		mPrimaryText->SetFont( FCoreStyle::GetDefaultFontStyle( "Bold", ScaledFontSize( PrimaryFontSize, mUiScale ) ) );
+		mPrimaryText->SetShadowOffset( shadowOffset );
 	}
 
 	if( mSecondaryText )
 	{
 		mSecondaryText->SetFont( FCoreStyle::GetDefaultFontStyle( "Regular", ScaledFontSize( SecondaryFontSize, mUiScale ) ) );
+		mSecondaryText->SetShadowOffset( shadowOffset );
 		if( UVerticalBoxSlot* slot = Cast< UVerticalBoxSlot >( mSecondaryText->Slot ) )
 		{
 			slot->SetPadding( FMargin( 0.f, LineGapY * mUiScale, 0.f, 0.f ) );
@@ -145,12 +191,24 @@ void UAltimeterWidget::ApplyUiScale()
 	{
 		mPanel->SetPadding( FMargin( PanelPaddingX * mUiScale, PanelPaddingY * mUiScale ) );
 	}
+}
 
-	if( mPanelSlot )
+void UAltimeterWidget::ApplyPlacement()
+{
+	using namespace AltimeterWidgetStyle;
+
+	if( !mPanelSlot )
 	{
-		// The gap is fixed: it clears the column the vanilla build hints use, whatever size the readout is.
-		mPanelSlot->SetPosition( FVector2D( SideOffsetX, SideOffsetY ) );
+		return;
 	}
+
+	// The gaps are deliberately not scaled: they clear the crosshair and the game's own hints, which do not
+	// change with the readout size.
+	const int32 index = static_cast< int32 >( mPlacement );
+	const FPlacementGeometry& geometry = Placements[ index < static_cast< int32 >( UE_ARRAY_COUNT( Placements ) ) ? index : 0 ];
+
+	mPanelSlot->SetAlignment( geometry.Alignment );
+	mPanelSlot->SetPosition( geometry.Offset );
 }
 
 FString UAltimeterWidget::FormatMeters( float meters, bool withSign )

@@ -70,7 +70,7 @@ UAltimeterUnlockInfo::UAltimeterUnlockInfo()
 {
 	mUnlockName = LOCTEXT( "Unlock_Name", "Floor Check" );
 	mUnlockDescription = LOCTEXT( "Unlock_Description",
-		"While placing a foundation or a conveyor lift, the build gun shows its height in metres beside the crosshair: the top of the floor and the surface it stacks on, or the start and end of the lift. Heights count from sea level, or from a site zero you set with the chat command /floorcheck zero. The size of the readout is under Mods -> Floor Check in the pause menu." );
+		"While placing a foundation or a conveyor lift, the build gun shows its height in metres beside the crosshair: the top of the floor and the surface it stacks on, or the start and end of the lift. Heights count from sea level, or from a site zero you set with the chat command /floorcheck zero. Type /floorcheck size 70 to make the readout bigger or smaller, and /floorcheck pos left to move it to the other side of the crosshair." );
 	mUnlockIconBig = FindGameTexture( PATH_SCHEMATIC_ICON );
 	mUnlockIconSmall = mUnlockIconBig;
 }

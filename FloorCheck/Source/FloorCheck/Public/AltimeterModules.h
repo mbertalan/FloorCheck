@@ -27,7 +27,8 @@ public:
 };
 
 /**
- * Root game-instance module: registers the settings page the player uses to size the readout.
+ * Root game-instance module: registers the settings page the player uses to size the readout, and the remote
+ * call object that carries a size or position typed in chat back to that one player's own machine.
  * It is a separate module because SML keeps mod settings on the game instance, which outlives any single world.
  */
 UCLASS()

@@ -1,10 +1,12 @@
 #include "AltimeterConfig.h"
+#include "AltimeterLocalSettings.h"
 #include "FloorCheck.h"
 
 #include "Configuration/ConfigManager.h"
 #include "Configuration/Properties/ConfigPropertyInteger.h"
 #include "Configuration/Properties/ConfigPropertySection.h"
 #include "Configuration/Properties/WidgetExtension/CP_Integer.h"
+#include "Configuration/Properties/WidgetExtension/CP_Section.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "UObject/UObjectGlobals.h"
@@ -21,6 +23,9 @@ namespace
 	const TCHAR* const IntegerClassPath = TEXT( "/SML/Interface/UI/Menu/Mods/ConfigProperties/BP_ConfigPropertyInteger.BP_ConfigPropertyInteger_C" );
 
 	const TCHAR* const ModReference = TEXT( "FloorCheck" );
+
+	/** One-switch flip: CPI_Spinbox gives a box the player can both drag and type into instead of a slider. */
+	constexpr ECP_IntegerWidgetType SizeWidgetType = ECP_IntegerWidgetType::CPI_Slider;
 }
 
 FConfigId UFloorCheckConfig::Id()
@@ -62,17 +67,37 @@ bool UFloorCheckConfig::BuildDefaults()
 	UConfigPropertyInteger* sizeProperty = NewObject< UConfigPropertyInteger >(
 		rootSection, integerClass, SizePropertyName, RF_ArchetypeObject | RF_Public );
 
+	// A Blueprint-authored page sets these explicitly; a page built in C++ would otherwise inherit whatever the
+	// SML Blueprint default object happens to carry, and a property that requires a world reload is drawn but
+	// refuses to be edited outside the main menu.
+	rootSection->bRequiresWorldReload = false;
+	rootSection->bHidden = false;
+	rootSection->bAllowUserReset = true;
+
+	if( UCP_Section* sectionWidget = Cast< UCP_Section >( rootSection ) )
+	{
+		sectionWidget->WidgetType = ECP_SectionWidgetType::CPS_Vertical;
+		sectionWidget->HasHeader = false;
+	}
+
 	sizeProperty->DisplayName = LOCTEXT( "Config_SizeName", "Readout size" );
 	sizeProperty->Tooltip = LOCTEXT( "Config_SizeTooltip",
-		"How big the height readout next to the crosshair is drawn, in percent. 100 is the size Floor Check used before version 1.1.0." );
+		"How big the height readout next to the crosshair is drawn, in percent." );
 	sizeProperty->DefaultValue = DefaultSizePercent;
 	sizeProperty->Value = DefaultSizePercent;
+	sizeProperty->bRequiresWorldReload = false;
+	sizeProperty->bHidden = false;
+	sizeProperty->bAllowUserReset = true;
 
 	if( UCP_Integer* sizeWidget = Cast< UCP_Integer >( sizeProperty ) )
 	{
-		sizeWidget->WidgetType = ECP_IntegerWidgetType::CPI_Slider;
+		sizeWidget->WidgetType = SizeWidgetType;
 		sizeWidget->MinValue = MinSizePercent;
 		sizeWidget->MaxValue = MaxSizePercent;
+	}
+	else
+	{
+		UE_LOG( LogFloorCheck, Warning, TEXT( "SML integer property has no widget extension; the readout size will be drawn as a plain text box" ) );
 	}
 
 	rootSection->SectionProperties.Add( SizePropertyName, sizeProperty );
@@ -83,8 +108,16 @@ bool UFloorCheckConfig::BuildDefaults()
 	return true;
 }
 
-float UFloorCheckConfig::GetHudScale( UObject* worldContext )
+int32 UFloorCheckConfig::GetSizePercent( UObject* worldContext )
 {
+	// A size set from chat is stored on this machine and wins, so the player has a way in even if the
+	// settings page cannot be used.
+	const int32 localPercent = UFloorCheckLocalSettings::GetSizePercent();
+	if( localPercent > 0 )
+	{
+		return FMath::Clamp( localPercent, MinSizePercent, MaxSizePercent );
+	}
+
 	int32 sizePercent = DefaultSizePercent;
 
 	const UWorld* world = worldContext ? worldContext->GetWorld() : nullptr;
@@ -102,7 +135,12 @@ float UFloorCheckConfig::GetHudScale( UObject* worldContext )
 		}
 	}
 
-	return FMath::Clamp( sizePercent, MinSizePercent, MaxSizePercent ) / 100.f;
+	return FMath::Clamp( sizePercent, MinSizePercent, MaxSizePercent );
+}
+
+float UFloorCheckConfig::GetHudScale( UObject* worldContext )
+{
+	return GetSizePercent( worldContext ) / 100.f;
 }
 
 #undef LOCTEXT_NAMESPACE

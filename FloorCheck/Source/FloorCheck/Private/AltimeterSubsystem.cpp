@@ -1,5 +1,6 @@
 #include "AltimeterSubsystem.h"
 #include "AltimeterConfig.h"
+#include "AltimeterLocalSettings.h"
 #include "AltimeterWidget.h"
 #include "AltimeterContent.h"
 #include "FloorCheck.h"
@@ -367,8 +368,9 @@ void AAltimeterSubsystem::UpdateHud()
 
 	if( UAltimeterWidget* widget = GetOrCreateWidget( playerController ) )
 	{
-		// Read every update so moving the slider in the mod settings takes effect without a restart.
+		// Read every update so a change in the mod settings or from chat takes effect without a restart.
 		widget->SetUiScale( UFloorCheckConfig::GetHudScale( this ) );
+		widget->SetPlacement( UFloorCheckLocalSettings::GetPlacement() );
 		widget->SetReading( reading );
 	}
 }

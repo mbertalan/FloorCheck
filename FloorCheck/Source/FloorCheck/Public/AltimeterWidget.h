@@ -33,14 +33,23 @@ public:
 	 */
 	void SetUiScale( float scale );
 
+	/**
+	 * Sets which side of the crosshair the readout sits on. Cheap to call every frame; it only does work
+	 * when the position actually changed.
+	 */
+	void SetPlacement( EFloorCheckPlacement placement );
+
 protected:
 	virtual void NativeOnInitialized() override;
 
 private:
 	UTextBlock* MakeText( const FLinearColor& colour ) const;
 
-	/** Rebuilds the fonts, the padding and the gap from the crosshair for the current size. */
+	/** Rebuilds the fonts, the line gap, the padding and the text shadow for the current size. */
 	void ApplyUiScale();
+
+	/** Pins the box to the current side of the crosshair, so it grows away from it whatever size it is. */
+	void ApplyPlacement();
 
 	/** "12.5" for sea-level readings, "+12.5" / "-3.0" when a site zero is set. Never "-0.0". */
 	static FString FormatMeters( float meters, bool withSign );
@@ -59,4 +68,6 @@ private:
 	TObjectPtr< UTextBlock > mSecondaryText;
 
 	float mUiScale = AAltimeterSubsystem::DefaultHudScale;
+
+	EFloorCheckPlacement mPlacement = AAltimeterSubsystem::DefaultPlacement;
 };

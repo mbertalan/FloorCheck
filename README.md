@@ -12,8 +12,12 @@ shows its height in metres, updated live as you move the hologram. Heights count
 - `/floorcheck zero` sets the site zero from the floor you are standing on, `/floorcheck zero <metres>` sets it
   explicitly, `/floorcheck sea` goes back to sea level. Alias: `/fc`. The site zero is shared in multiplayer and
   saved with the game.
-- Readout size: pause menu → **Mods** → **Floor Check** → *Readout size*, 40 % to 200 %. Saved per machine, so
-  every player in a session picks their own.
+- Readout size: `/floorcheck size 70` in chat, anywhere from 50 % to 200 %, or pause menu → **Mods** →
+  **Floor Check** → *Readout size*. `/floorcheck size default` hands the size back to the settings page.
+- Readout position: `/floorcheck pos left`, `right`, `top` or `bottom` puts the box on that side of the
+  crosshair. It always grows away from the crosshair, so the gap stays the same at every size.
+- Size and position are stored on your own computer and never sent to anyone else, so every player in a session
+  picks their own.
 
 Unlocked by a Tier 1 HUB milestone called **Floor Check** (10 Iron Rod + 10 Iron Plate, 30 s). It can still be
 bought on a save that is already past Tier 1.
@@ -46,4 +50,4 @@ package with Alpakit. `BUILD_STEPS.md` has the long version.
 
 ## Credits
 
-W@iThere. Built with the Satisfactory modding toolchain and SML.
+W@ithere. Built with the Satisfactory modding toolchain and SML.

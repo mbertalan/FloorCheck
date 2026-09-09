@@ -1,6 +1,7 @@
 #include "AltimeterModules.h"
 #include "AltimeterConfig.h"
 #include "AltimeterContent.h"
+#include "AltimeterRemoteCall.h"
 #include "AltimeterSubsystem.h"
 #include "AltimeterCommand.h"
 #include "FloorCheck.h"
@@ -53,6 +54,9 @@ void UAltimeterGameWorldModule::DispatchLifecycleEvent( ELifecyclePhase Phase )
 UAltimeterGameInstanceModule::UAltimeterGameInstanceModule()
 {
 	bRootModule = true;
+
+	// SML reads RemoteCallObjects during INITIALIZATION, so the class has to be listed in the constructor.
+	RemoteCallObjects.Add( UFloorCheckRemoteCallObject::StaticClass() );
 }
 
 void UAltimeterGameInstanceModule::DispatchLifecycleEvent( ELifecyclePhase Phase )

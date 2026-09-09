@@ -11,6 +11,9 @@
  * SML stores it per machine in <Satisfactory>/FactoryGame/Configs/FloorCheck.cfg and writes it back
  * whenever the player moves the slider, so the choice survives a restart and never travels to other players.
  *
+ * The same size can be set from chat instead, which is stored elsewhere and wins over this page. See
+ * UFloorCheckLocalSettings.
+ *
  * The whole page is built in C++: the class default object is given a root section and one property, both
  * instances of SML's own already-cooked editor-widget classes, so the mod ships no assets of its own.
  */
@@ -37,6 +40,12 @@ public:
 	 */
 	static bool BuildDefaults();
 
-	/** The size the player chose, as a multiplier. Falls back to the default while the configuration is not registered. */
+	/**
+	 * The size the readout is actually drawn at on this machine, in percent: the value set from chat when there
+	 * is one, otherwise the settings page, otherwise the default.
+	 */
+	static int32 GetSizePercent( UObject* worldContext );
+
+	/** The same answer as a multiplier, which is what the widget wants. */
 	static float GetHudScale( UObject* worldContext );
 };

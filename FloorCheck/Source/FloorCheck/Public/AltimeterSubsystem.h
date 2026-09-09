@@ -11,6 +11,16 @@ class AFGHologram;
 class APlayerController;
 class UAltimeterWidget;
 
+/** Where the readout is drawn relative to the crosshair. The box always grows away from the crosshair. */
+UENUM()
+enum class EFloorCheckPlacement : uint8
+{
+	Right UMETA( DisplayName = "Right of crosshair" ),
+	Left UMETA( DisplayName = "Left of crosshair" ),
+	Above UMETA( DisplayName = "Above crosshair" ),
+	Below UMETA( DisplayName = "Below crosshair" )
+};
+
 /** One HUD reading for the hologram the local player is currently placing. All heights are metres relative to the active zero. */
 USTRUCT( BlueprintType )
 struct FLOORCHECK_API FAltimeterReading
@@ -72,14 +82,20 @@ public:
 	/** false: foundations show only the new floor top, never the surface they are stacked on. */
 	static constexpr bool bShowFoundationReference = true;
 
-	/** Readout size used until the player picks one in the mod settings. 1.0 is the full-size design. */
-	static constexpr float DefaultHudScale = 0.50f;
+	/** Readout size used until the player picks one. 1.0 is the full-size design. */
+	static constexpr float DefaultHudScale = 0.70f;
 
-	/** Smallest readout size the mod settings allow. */
-	static constexpr float MinHudScale = 0.40f;
+	/** Smallest readout size the player can pick. */
+	static constexpr float MinHudScale = 0.50f;
 
-	/** Largest readout size the mod settings allow. */
+	/** Largest readout size the player can pick. */
 	static constexpr float MaxHudScale = 2.00f;
+
+	/** One-switch flip: false drops the position choice and pins the readout to DefaultPlacement. */
+	static constexpr bool bAllowPlacementChoice = true;
+
+	/** Where the readout sits until the player moves it. */
+	static constexpr EFloorCheckPlacement DefaultPlacement = EFloorCheckPlacement::Right;
 
 	/** How often the HUD reading is refreshed (seconds). */
 	static constexpr float UpdateIntervalSeconds = 0.05f;

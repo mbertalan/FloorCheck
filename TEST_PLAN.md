@@ -5,7 +5,37 @@ throw-away copy of an existing one. For each line note **pass / fail** and, on f
 Anything unexpected: keep a screenshot and the last 50 lines of
 `%LOCALAPPDATA%/FactoryGame/Saved/Logs/FactoryGame.log`.
 
-## 0. What is new in 1.1.0 (test these first)
+## 0. What is new in 1.1.2 (test these first)
+
+Before you start, note whether `<Satisfactory>/FactoryGame/Configs/FloorCheck.cfg` already exists. If it does it
+still holds `ReadoutSizePercent: 50` from the last build, so rows S1 and S2 below are the ones that prove the fix.
+
+| # | Do | Expect |
+|---|---|---|
+| S1 | In chat, type `/floorcheck size` | a reply with the size you are on now and the range 50-200 |
+| S2 | Type `/floorcheck size 70` while a foundation hologram is up | the readout grows **immediately**, no restart. Reply: "readout size: 70 %. Saved on this computer." |
+| S3 | Type `/floorcheck size 500`, then `/floorcheck size 5` | both are pulled back into 50-200 and the reply says so |
+| S4 | Type `/floorcheck size abc` | red reply asking for a number; nothing changes |
+| S5 | Quit to desktop, start again, take out a foundation | the size from S2 is still there. File: `%LOCALAPPDATA%/FactoryGame/Saved/Config/Windows/Game.ini`, section `[/Script/FloorCheck.FloorCheckLocalSettings]` |
+| S6 | Pause menu -> Mods -> Floor Check | the page shows **Readout size** as a vertical list, sitting at 70 % on a fresh install |
+| S7 | **The 1.1.1 bug.** Drag the slider on that page from inside a loaded game | it **moves**, and the number follows. If it still refuses, say so - the chat command is then the only route and that is fine |
+| S8 | Open the same page from the **main menu**, before loading a save, and drag the slider | it moves. If S7 fails but S8 works, report exactly that: it names the remaining cause in one word |
+| S9 | Press *Reset to default* on that page | it goes back to 70 % |
+| S10 | After S2, move the slider on the page, then type `/floorcheck size default` and move it again | the first time nothing happens on screen - a size typed in chat wins on purpose; after `default` the slider drives the readout again |
+| S11 | Compare the two lines with 1.1.1 from memory | both are clearly bigger, and the smaller second line is now readable rather than borderline |
+| S12 | `/floorcheck pos left` | the box jumps to the left of the crosshair, the same distance out, and does not cover the crosshair |
+| S13 | `/floorcheck pos top` | the box sits above the crosshair, clear of it |
+| S14 | `/floorcheck pos bottom` - then check it three ways: plain foundation, zoop-dragging a row, and a red "can't build here" placement | it must not sit on the game's own hint lines in any of the three. This is the one position that was not proven before shipping |
+| S15 | `/floorcheck pos right`, then `/floorcheck size 200` | at maximum size the box still grows away from the crosshair and stays on screen |
+| S16 | `/floorcheck pos sideways` | red reply listing left, right, top, bottom; nothing changes |
+| S17 | Quit and restart | the position from S12-S15 is still there |
+| S18 | Main menu -> Mods, look at the Floor Check entry | author reads **W@ithere**, version **1.1.2** |
+| S19 | Multiplayer, if you can: a second player types `/floorcheck size 200` | only **their** readout changes. Yours does not move, and neither does the host's |
+
+## 0b. What was new in 1.1.0
+
+Still worth re-running, but read the numbers as history: the size range is now 50-200 % and the default is 70 %,
+so N2, N3 and N5 will not match word for word.
 
 | # | Do | Expect |
 |---|---|---|

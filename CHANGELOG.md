@@ -1,7 +1,17 @@
 # Floor Check — changelog
 
+## 1.1.2 (2026-09-09)
+- **The readout is bigger.** The default is now 70 % instead of 50 %, and the smaller of the two lines grew as well, so both numbers read clearly.
+- **You can change the size two ways now.** In chat, type `/floorcheck size 70` (any number from 50 to 200). Or use the old route: pause menu -> **Mods** -> **Floor Check** -> *Readout size*. The chat command is the one to reach for: it works even if the settings page will not let you move the slider. `/floorcheck size` on its own tells you the size you are on, and `/floorcheck size default` hands the size back to the settings page. Note that once you set a size in chat, the settings page stops having an effect until you type that.
+- **The settings page may now accept changes.** Two likely causes were fixed: the page was laid out sideways, which squashes a slider, and it was missing a switch SML looks at. Neither could be tested without the game, so the chat command above is the sure route.
+- **You can move the readout.** `/floorcheck pos left`, `right`, `top` or `bottom` puts the box on that side of the crosshair. It always grows away from the crosshair, so it stays clear however big you make it. Heads-up: `bottom` is the one place the game draws its own build hints, so try it before you keep it.
+- Size and position are saved on your own computer only. In multiplayer nobody else sees or gets your choice, and the site zero is still shared as before.
+- The mod is credited to **W@ithere** in the in-game mod list.
+
+**If you already played 1.1.1:** the game remembers the 50 % you had, so the new default will not appear on its own. Type `/floorcheck size 70` once, or press *Reset to default* on the settings page.
+
 ## 1.1.1 (2026-09-09)
-- The mod is credited to **W@iThere** in the in-game mod list. No gameplay change.
+- The mod is credited to **W@ithere** in the in-game mod list. No gameplay change.
 
 ## 1.1.0 (2026-09-09)
 - The readout now sits **beside the crosshair** instead of under it, so it no longer covers the game's own build hints (build mode, zoop count, "can't build here").
