@@ -5,7 +5,22 @@ throw-away copy of an existing one. For each line note **pass / fail** and, on f
 Anything unexpected: keep a screenshot and the last 50 lines of
 `%LOCALAPPDATA%/FactoryGame/Saved/Logs/FactoryGame.log`.
 
-## 0. What is new in 1.1.2 (test these first)
+## 0. What is new in 1.1.3 (test these first)
+
+The whole of 1.1.3 is the research card, so these four rows are the release. Nothing else was touched.
+
+| # | Do | Expect |
+|---|---|---|
+| R1 | Open the HUB terminal, tier 1, click **Floor Check** | the **Rewards** panel holds one card named *Floor Check* with an icon on it, not an empty box |
+| R2 | Hover or read that card | it describes the height readout and names `/floorcheck zero` |
+| R3 | Look at the **Cost** panel on the same screen | two item stacks with icons: **10 Iron Rod** and **10 Iron Plate**. Compare it side by side with the vanilla *Base Building* milestone; it should read the same way |
+| R4 | Buy the milestone | it takes exactly those items, finishes in 30 s, and the readout starts working |
+
+If R1 or R3 is still empty, the answer is in the log: open
+`%LOCALAPPDATA%/FactoryGame/Saved/Logs/FactoryGame.log` and search for `LogFloorCheck`. One line reads
+"Floor Check research card: N cost items, N reward cards" and names anything it could not load. Send that line.
+
+## 0b. What was new in 1.1.2
 
 Before you start, note whether `<Satisfactory>/FactoryGame/Configs/FloorCheck.cfg` already exists. If it does it
 still holds `ReadoutSizePercent: 50` from the last build, so rows S1 and S2 below are the ones that prove the fix.
@@ -29,10 +44,10 @@ still holds `ReadoutSizePercent: 50` from the last build, so rows S1 and S2 belo
 | S15 | `/floorcheck pos right`, then `/floorcheck size 200` | at maximum size the box still grows away from the crosshair and stays on screen |
 | S16 | `/floorcheck pos sideways` | red reply listing left, right, top, bottom; nothing changes |
 | S17 | Quit and restart | the position from S12-S15 is still there |
-| S18 | Main menu -> Mods, look at the Floor Check entry | author reads **W@ithere**, version **1.1.2** |
+| S18 | Main menu -> Mods, look at the Floor Check entry | author reads **W@ithere**, version **1.1.3** |
 | S19 | Multiplayer, if you can: a second player types `/floorcheck size 200` | only **their** readout changes. Yours does not move, and neither does the host's |
 
-## 0b. What was new in 1.1.0
+## 0c. What was new in 1.1.0
 
 Still worth re-running, but read the numbers as history: the size range is now 50-200 % and the default is 70 %,
 so N2, N3 and N5 will not match word for word.

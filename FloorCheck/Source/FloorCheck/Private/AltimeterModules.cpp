@@ -22,6 +22,10 @@ void UAltimeterGameWorldModule::DispatchLifecycleEvent( ELifecyclePhase Phase )
 	// SML registers mSchematics / mResearchTrees during INITIALIZATION, so the tree must be decided at CONSTRUCTION.
 	if( Phase == ELifecyclePhase::CONSTRUCTION )
 	{
+		// The cost, the reward card and the icons are filled here, not in the schematic's constructor: that runs while
+		// the module DLL loads, which is too early to reach the game's own content in a packaged build.
+		UAltimeterSchematic::ConfigureContent();
+
 		TSubclassOf< UFGResearchTree > researchTree = nullptr;
 		if( !bForceHubMilestone )
 		{

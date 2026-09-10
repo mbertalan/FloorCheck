@@ -1,5 +1,10 @@
 # Floor Check — changelog
 
+## 1.1.3 (2026-09-10)
+- **The research card now says what you get and what it costs.** On the HUB milestone screen, *Rewards* shows a **Floor Check** card with its icon and a line of what the mod does, and *Cost* lists **10 Iron Rod** and **10 Iron Plate** with their item icons. Both panels were blank in every build up to 1.1.2, so there was no way to see the price before buying it.
+- The price itself has not changed: it is the same 10 Iron Rod + 10 Iron Plate and 30 seconds it always was. Only the card you read was empty.
+- Nothing else changed. If you already bought the research, you keep it.
+
 ## 1.1.2 (2026-09-09)
 - **The readout is bigger.** The default is now 70 % instead of 50 %, and the smaller of the two lines grew as well, so both numbers read clearly.
 - **You can change the size two ways now.** In chat, type `/floorcheck size 70` (any number from 50 to 200). Or use the old route: pause menu -> **Mods** -> **Floor Check** -> *Readout size*. The chat command is the one to reach for: it works even if the settings page will not let you move the slider. `/floorcheck size` on its own tells you the size you are on, and `/floorcheck size default` hands the size back to the settings page. Note that once you set a size in chat, the settings page stops having an effect until you type that.

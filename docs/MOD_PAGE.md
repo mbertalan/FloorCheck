@@ -49,8 +49,9 @@ route.
 
 ### Unlocking it
 
-A Tier 1 HUB milestone called **Floor Check**: 10 Iron Rod + 10 Iron Plate, 30 seconds. It can still be
-bought at the HUB terminal on a save that is already past Tier 1.
+A Tier 1 HUB milestone called **Floor Check**: 10 Iron Rod + 10 Iron Plate, 30 seconds. The milestone screen
+shows both, the reward card under *Rewards* and the two items under *Cost*, the way a vanilla milestone does.
+It can still be bought at the HUB terminal on a save that is already past Tier 1.
 
 ### Requirements
 

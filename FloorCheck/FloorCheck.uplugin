@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.1.2",
-	"SemVersion": "1.1.2",
+	"VersionName": "1.1.3",
+	"SemVersion": "1.1.3",
 	"GameVersion": ">=491125",
 	"FriendlyName": "Floor Check",
 	"Description": "Shows the height in metres beside the crosshair while placing foundations and conveyor lifts: the new floor top and the surface it stacks on, or the start and end of the lift. Above sea level, or above a site zero you set.",

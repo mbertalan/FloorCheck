@@ -6,7 +6,7 @@
 
 **A [Satisfactory](https://www.satisfactorygame.com/) mod that tells you how high you are building.**
 
-[![Version](https://img.shields.io/badge/version-1.1.2-orange)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.3-orange)](CHANGELOG.md)
 [![Satisfactory](https://img.shields.io/badge/Satisfactory-1.2-blue)](https://www.satisfactorygame.com/)
 [![SML](https://img.shields.io/badge/SML-3.12%2B-blueviolet)](https://ficsit.app/)
 [![ficsit.app](https://img.shields.io/badge/ficsit.app-Floor%20Check-brightgreen)](https://ficsit.app/mod/FloorCheck)
@@ -64,8 +64,9 @@ route.
 
 ## Unlocking it
 
-A Tier 1 HUB milestone called **Floor Check**: 10 Iron Rod + 10 Iron Plate, 30 seconds. It can still be
-bought at the HUB terminal on a save that is already past Tier 1.
+A Tier 1 HUB milestone called **Floor Check**: 10 Iron Rod + 10 Iron Plate, 30 seconds. The milestone screen
+shows both, the reward card under *Rewards* and the two items under *Cost*, the way a vanilla milestone does.
+It can still be bought at the HUB terminal on a save that is already past Tier 1.
 
 ## Install
 
